@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pluck Physics Simulator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            background: #020617;
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            cursor: crosshair;
+            touch-action: none;
+            border: 1px solid #334155;
+        }
+
+        .controls {
+            display: grid;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        input[type=range],
+        select {
+            cursor: pointer;
+            accent-color: #38bdf8;
+        }
+
+        select {
+            background: #0f172a;
+            color: #38bdf8;
+            border: 1px solid #334155;
+            padding: 5px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .stats {
+            margin-top: 25px;
+            padding: 15px;
+            background: #0f172a;
+            border-radius: 8px;
+            color: #38bdf8;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hint {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .theory-content {
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .theory-content h3 {
+            color: #38bdf8;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 style="margin: 0 0 5px 0; color: #38bdf8;">String Mechanics</h2>
+        <p class="hint">Pull the string and release to hear the note</p>
+        <canvas id="stringCanvas"></canvas>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Environment Material</label>
+                <select id="material">
+                    <option value="air">Air (Standard)</option>
+                    <option value="wood">Wood (Acoustic Resonance)</option>
+                    <option value="concrete">Concrete (Highly Reflective)</option>
+                    <option value="foam">Acoustic Foam (Absorbent)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Length (L) <span><span id="val-length">0.70</span>m</span></label>
+                <input type="range" id="length" min="0.3" max="1.1" step="0.01" value="0.70">
+            </div>
+            <div class="control-group">
+                <label>Tension (T) <span><span id="val-tension">200</span>N</span></label>
+                <input type="range" id="tension" min="50" max="800" step="1" value="200">
+            </div>
+            <div class="control-group">
+                <label>Thickness (μ) <span><span id="val-thickness">0.005</span>kg/m</span></label>
+                <input type="range" id="thickness" min="0.001" max="0.015" step="0.0001" value="0.005">
+            </div>
+        </div>
+
+        <div class="stats">
+            <span>Fundamental Frequency:</span>
+            <span id="freqDisplay">0 Hz</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="theory-content">
+            <h3>Vibration of Strings</h3>
+            <p>
+                The vibration of strings explains how stretched strings in musical instruments such as guitars,
+                violins, and pianos produce sound. When a string is plucked, disturbed, or struck, it oscillates
+                in standing wave patterns. These vibrations travel through the surrounding medium and create
+                sound waves that can be heard by the human ear.
+            </p>
+
+            <p>
+                The frequency of vibration depends mainly on three factors:
+            </p>
+
+            <ul>
+                <li><b>Length (L)</b> of the vibrating string</li>
+                <li><b>Tension (T)</b> applied to the string</li>
+                <li><b>Linear density (μ)</b> or mass per unit length of the string</li>
+            </ul>
+
+            <h3>Wave Physics</h3>
+            <p>
+                Wave physics is the branch of physics that studies how disturbances transfer energy from one
+                place to another without transporting matter. Sound waves produced by vibrating strings are
+                mechanical waves that require a medium such as air, water, or solids to travel.
+            </p>
+
+            <p>
+                Wave physics has many practical applications including musical instruments, ultrasound imaging,
+                optical systems, lasers, SONAR, and RADAR technologies.
+            </p>
+
+            <h3>Frequency Relationship</h3>
+            <p>
+                Frequency is the number of oscillations completed in one second and is measured in Hertz (Hz).
+                For a stretched string, the fundamental frequency is given by:
+            </p>
+
+            <p style="text-align:center; font-size:1.1rem; color:#38bdf8;">
+                f = (1 / 2L) √(T / μ)
+            </p>
+
+            <p>
+                Where:
+            </p>
+
+            <ul>
+                <li><b>f</b> = Frequency of vibration</li>
+                <li><b>L</b> = Length of vibrating string</li>
+                <li><b>T</b> = Tension in the string</li>
+                <li><b>μ</b> = Linear density of the string</li>
+            </ul>
+
+            <h3>Effects of Different Parameters</h3>
+            <ul>
+                <li>Increasing the tension increases the frequency and produces a higher pitch.</li>
+                <li>Increasing the length decreases the frequency and produces a lower pitch.</li>
+                <li>Increasing the linear density decreases the frequency.</li>
+            </ul>
+
+            <h3>Acoustics</h3>
+            <p>
+                Acoustics is the branch of physics that deals with the production, transmission, and reception
+                of sound. Acoustic energy is created when an object vibrates and causes nearby air molecules
+                to vibrate, producing sound waves.
+            </p>
+
+            <p>
+                Acoustics has important applications in architecture, medicine, underwater navigation,
+                environmental studies, and communication systems.
+            </p>
+
+            <h3>Applications of Acoustics</h3>
+            <ul>
+                <li><b>Architecture:</b> Designing auditoriums and theaters to reduce echo and reverberation.</li>
+                <li><b>Medical Science:</b> Ultrasound imaging and shock wave treatment technologies.</li>
+                <li><b>Navigation:</b> SONAR and RADAR systems for locating underwater or distant objects.</li>
+                <li><b>Noise Control:</b> Reducing unwanted sound pollution in industries and cities.</li>
+            </ul>
+
+            <h3>Damping and Resonance</h3>
+            <p>
+                Damping is the gradual reduction of vibration amplitude due to energy loss through air
+                resistance or surrounding materials. Resonance occurs when a system vibrates at its natural
+                frequency, producing maximum amplitude and stronger sound.
+            </p>
+
+            <p>
+                In this simulator, different environment materials such as wood, concrete, air, and foam affect
+                the damping and sustain of the vibrating string, demonstrating real acoustic behavior.
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('stringCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let audioCtx, oscillator, gainNode, filterNode;
+        let isDragging = false;
+        let amplitude = 0;
+        let frequency = 0;
+        let phase = 0;
+
+        const materials = {
+            air: { damping: 0.985, sustain: 2.5, cutoff: 12000 },
+            wood: { damping: 0.990, sustain: 3.5, cutoff: 4000 },
+            concrete: { damping: 0.996, sustain: 6.0, cutoff: 20000 },
+            foam: { damping: 0.900, sustain: 0.3, cutoff: 800 }
+        };
+
+        const inputs = {
+            material: document.getElementById('material'),
+            L: document.getElementById('length'),
+            T: document.getElementById('tension'),
+            mu: document.getElementById('thickness')
+        };
+
+        const displays = {
+            L: document.getElementById('val-length'),
+            T: document.getElementById('val-tension'),
+            mu: document.getElementById('val-thickness'),
+            f: document.getElementById('freqDisplay')
+        };
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                filterNode = audioCtx.createBiquadFilter();
+                gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                filterNode.type = 'lowpass';
+
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+
+                oscillator.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Helper function to get Y coordinate 
+        function getClientY(e) {
+            return e.touches ? e.touches[0].clientY : e.clientY;
+        }
+
+        function handleInteractStart(e) {
+            if (e.cancelable) e.preventDefault(); // Prevents mobile scrolling while interacting
+            initAudio();
+            isDragging = true;
+            gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.01);
+
+            // Set initial grab amplitude immediately
+            const rect = canvas.getBoundingClientRect();
+            amplitude = (getClientY(e) - rect.top) - (canvas.height / 2);
+        }
+
+        function handleInteractMove(e) {
+            if (!isDragging) return;
+            if (e.cancelable) e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            amplitude = (getClientY(e) - rect.top) - (canvas.height / 2);
+        }
+
+        function handleInteractEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const selectedMat = materials[inputs.material.value];
+            const volume = Math.min(Math.abs(amplitude) / 150, 0.5);
+            const now = audioCtx.currentTime;
+
+            filterNode.frequency.setTargetAtTime(selectedMat.cutoff, now, 0.01);
+
+            gainNode.gain.cancelScheduledValues(now);
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(volume, now + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + selectedMat.sustain);
+        }
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', handleInteractStart);
+        canvas.addEventListener('mousemove', handleInteractMove);
+        window.addEventListener('mouseup', handleInteractEnd);
+
+        // Touch Events
+        canvas.addEventListener('touchstart', handleInteractStart, { passive: false });
+        canvas.addEventListener('touchmove', handleInteractMove, { passive: false });
+        window.addEventListener('touchend', handleInteractEnd);
+        window.addEventListener('touchcancel', handleInteractEnd);
+
+        function animate() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            const centerY = canvas.height / 2;
+            const margin = 50;
+
+            const L = parseFloat(inputs.L.value);
+            const T = parseFloat(inputs.T.value);
+            const mu = parseFloat(inputs.mu.value);
+            const selectedMat = materials[inputs.material.value];
+
+            frequency = (1 / (2 * L)) * Math.sqrt(T / mu);
+
+            displays.L.textContent = L;
+            displays.T.textContent = T;
+            displays.mu.textContent = mu;
+            displays.f.textContent = Math.round(frequency) + " Hz";
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (oscillator) {
+                oscillator.frequency.value = frequency;
+            }
+
+            if (!isDragging) {
+                amplitude *= selectedMat.damping;
+                phase += (frequency * 0.1);
+            } else {
+                phase = 0;
+            }
+
+            // Draw String
+            const drawLen = (L / 1.1) * (canvas.width - margin * 2);
+            const startX = (canvas.width - drawLen) / 2;
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = mu * 1500;
+            ctx.lineCap = 'round';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#38bdf8';
+
+            for (let x = 0; x <= drawLen; x++) {
+                const wave = isDragging ? 1 : Math.sin(phase);
+                const y = centerY + (amplitude * wave) * Math.sin((Math.PI * x) / drawLen);
+                if (x === 0) ctx.moveTo(startX + x, y);
+                else ctx.lineTo(startX + x, y);
+            }
+            ctx.stroke();
+
+            // Draw Anchors
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#475569";
+            ctx.beginPath();
+            ctx.arc(startX, centerY, 4, 0, Math.PI * 2);
+            ctx.arc(startX + drawLen, centerY, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
